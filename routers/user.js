@@ -37,5 +37,35 @@ const save = async (req, res) => {
     }
 }
 
+const get = (req, res) => {
+    db('users')
+        .select('id', 'name' , 'email', 'admin')
+        .then(users => res.json(users))
+        .catch(err => res.status(500).send(err))
+}
 
-module.exports = { save }
+const getById = (req, res) => {
+    db('users')
+        .select('id', 'name', 'email', 'admin')
+        .where({ id: req.params.id })
+        .first()
+        .then(user => res.json(user))
+        .catch(err => res.status(500).send(err))
+}
+
+const remove = async (req, res) => {
+    try {
+        const articles= await app.db('articles')
+            .where({ userId: req.params.id})
+        notExistOrError(articles, 'Usuarios possui artigos')
+
+        const rowsUpdated  = await db('users')
+            .update({deletedAt: new Date()})
+            .where({ id: req.params.id})
+        existsOrError(rowsUpdated, 'Usuario não foi encontrado!')
+    } catch(msg) {
+        res.status(400).send(msg)
+    }
+}
+
+module.exports = { save, get, getById }
