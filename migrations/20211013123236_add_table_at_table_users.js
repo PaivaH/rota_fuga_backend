@@ -5,7 +5,7 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-    return knex.alterTable('users', table => {
+    return knex.table('users', table => {
         table.dropClumn('deletedAt')
     })
 };

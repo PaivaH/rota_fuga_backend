@@ -1,4 +1,5 @@
 const db = require('../config/db')
+
 const { existsOrError, 
         notExistOrError, 
         equalsOrError } = require('./validation')
@@ -55,9 +56,9 @@ const getById = (req, res) => {
 
 const remove = async (req, res) => {
     try {
-        const articles= await app.db('articles')
+        const report= await app.db('articles')
             .where({ userId: req.params.id})
-        notExistOrError(articles, 'Usuarios possui artigos')
+        notExistOrError(report, 'Usuarios possui artigos')
 
         const rowsUpdated  = await db('users')
             .update({deletedAt: new Date()})
@@ -68,4 +69,4 @@ const remove = async (req, res) => {
     }
 }
 
-module.exports = { save, get, getById }
+module.exports = { save, get, getById, remove }
