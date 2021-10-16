@@ -3,7 +3,9 @@ const db = require('../config/db')
 const { existsOrError, notExistOrError, equalsOrError } = require('./validation')
 
 const save = (req, res) => {
+
     const report = { ...req.body }
+
     if (req.params.id) {
         report.id = req.params.id
     }
@@ -17,7 +19,7 @@ const save = (req, res) => {
     } catch (msg) {
         res.status(400).send(msg)
     }
-    report.reported_date = Math.floor(Date.now() / 1000)
+    report.reported_date = new Date()
 
     if (report.id) {
         db('report')
@@ -35,7 +37,7 @@ const save = (req, res) => {
 
 const remove = async (req, res) => {
     try {
-        const rowsDeleted = await app.db('report')
+        const rowsDeleted = await db('report')
             .where({ id: req.params.id }).del()
 
         try {
@@ -57,19 +59,18 @@ const get = async (req, res) => {
     const result = await db('report').count('id').first()
     const count = parseInt(result.count)
 
-    app.db('report')
-        .select('id', 'name', 'description')
+    db('report')
+        .select()
         .limit(limit).offset(page * limit - limit)
         .then(report => res.json({ data: report, count, limit }))
         .catch(err => res.status(500).send(err))
 }
 
 const getById = (req, res) => {
-    app.db('report')
+    db('report')
         .where({ id: req.params.id })
         .first()
         .then(report => {
-            report.content = report.content.toString()
             return res.json(report)
         })
         .catch(err => res.status(500).send(err))

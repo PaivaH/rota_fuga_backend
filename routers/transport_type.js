@@ -30,19 +30,26 @@ const save = (req, res) => {
 
 const remove = async (req, res) => {
     try {
-        const rowsDeleted = await app.db('transport_type')
+        const rowsDeleted = await db('transport_type')
             .where({ id: req.params.id }).del()
-
+        
         try {
-            existsOrError(rowsDeleted, 'reporte não encontrado.')
-        } catch (msg) {
-            return res.status(400).send(msg)
+            existsOrError(rowsDeleted, 'Artigo não foi encontrado.')
+        } catch(msg) {
+            return res.status(400).send(msg)    
         }
 
         res.status(204).send()
-    } catch (msg) {
+    } catch(msg) {
         res.status(500).send(msg)
     }
 }
 
-module.exports = { save, remove }
+const get = (req, res) => {
+    db('transport_type')
+        .select()
+        .then(users => res.json(users))
+        .catch(err => res.status(500).send(err))
+}
+
+module.exports = { save, remove, get }

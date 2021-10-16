@@ -4,6 +4,7 @@ const { existsOrError, notExistOrError, equalsOrError } = require('./validation'
 
 const save = (req, res) => {
     const report_type = { ...req.body }
+    
     if (req.params.id) {
         report_type.id = req.params.id
     }
@@ -46,4 +47,11 @@ const remove = async (req, res) => {
     }
 }
 
-module.exports = { save, remove }
+const get = async (req, res) => {
+    db('report_type')
+        .select('id', 'name', 'sensible')
+        .then(report_type => res.json(report_type))
+        .catch(err => res.status(500).send(err))
+}
+
+module.exports = { save, remove, get }

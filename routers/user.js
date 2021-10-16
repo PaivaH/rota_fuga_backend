@@ -1,11 +1,14 @@
 const db = require('../config/db')
 
-const { existsOrError, 
-        notExistOrError, 
-        equalsOrError } = require('./validation')
+const { existsOrError, notExistOrError, equalsOrError } = require('./validation')
 
 const save = async (req, res) => {
     const user = { ...req.body }
+
+    if(req.params.id) {
+        user.id = req.params.id
+    } 
+
     try {
         existsOrError(user.name, 'Nome não informado')
         existsOrError(user.email, 'E-mail não informado')
@@ -29,6 +32,7 @@ const save = async (req, res) => {
             .update(user)
             .where({ id: user.id })
             .then(_ => res.status(204).send())
+            .whereNull('deletedAt')
             .catch(err => res.status(500).send(err))
     } else {
         db('users')
@@ -41,6 +45,7 @@ const save = async (req, res) => {
 const get = (req, res) => {
     db('users')
         .select('id', 'name' , 'email', 'admin')
+        .whereNull('deletedAt')
         .then(users => res.json(users))
         .catch(err => res.status(500).send(err))
 }
@@ -49,6 +54,7 @@ const getById = (req, res) => {
     db('users')
         .select('id', 'name', 'email', 'admin')
         .where({ id: req.params.id })
+        .whereNull('deletedAt')
         .first()
         .then(user => res.json(user))
         .catch(err => res.status(500).send(err))
@@ -56,14 +62,15 @@ const getById = (req, res) => {
 
 const remove = async (req, res) => {
     try {
-        const report= await app.db('articles')
-            .where({ userId: req.params.id})
-        notExistOrError(report, 'Usuarios possui artigos')
+        const report = await db('report')
+            .where({ user_id: req.params.id })
+        notExistOrError(report, 'Usuário possui artigos.')
 
-        const rowsUpdated  = await db('users')
+        const rowsUpdated = await db('users')
             .update({deletedAt: new Date()})
-            .where({ id: req.params.id})
-        existsOrError(rowsUpdated, 'Usuario não foi encontrado!')
+            .where({ id: req.params.id })
+        existsOrError(rowsUpdated, 'Usuário não foi encontrado.')
+        res.status(204).send()
     } catch(msg) {
         res.status(400).send(msg)
     }
