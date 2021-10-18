@@ -1,9 +1,14 @@
+const auth = require('./auth')
 const user = require('./user')
 const report = require('./report')
 const reportType = require('./report_type')
 const transportType = require('./transport_type')
 
 module.exports = app => {
+    app.post('/signup', user.save)
+    app.post('/signin', auth.signin)
+    app.post('/validateToken', auth.validateToken)
+
     //rotas de usuarios
     app.route('/user')
         .post(user.save)
