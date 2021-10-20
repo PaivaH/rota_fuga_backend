@@ -3,6 +3,7 @@ const user = require('./user')
 const report = require('./report')
 const reportType = require('./report_type')
 const transportType = require('./transport_type')
+const passport = require('../config/passport')
 
 module.exports = app => {
     app.post('/signup', user.save)
@@ -11,39 +12,47 @@ module.exports = app => {
 
     //rotas de usuarios
     app.route('/user')
+        .all(passport.authenticate())
         .post(user.save)
         .get(user.get)
         
     app.route('/user/:id')
+        .all(passport.authenticate())
         .get(user.getById)
         .patch(user.save)
         .delete(user.remove)
 
     //rotas de reportes
     app.route('/report')
+        .all(passport.authenticate())
         .get(report.get)
         .post(report.save)
 
     app.route('/report/:id')
+        .all(passport.authenticate())
         .get(report.getById)
         .patch(report.save)
         .delete(report.remove)
 
     //rotas de tipos de reporte
     app.route('/report_type')
+        .all(passport.authenticate())
         .get(reportType.get)
         .post(reportType.save)
 
     app.route('/report_type/:id')
+        .all(passport.authenticate())
         .patch(reportType.save)
         .delete(reportType.remove)
 
     //rotas de tipos de transporte 
     app.route('/transport_type')
+        .all(passport.authenticate())
         .get(transportType.get)
         .post(transportType.save)
 
     app.route('/transport_type/:id')
+        .all(passport.authenticate())
         .patch(transportType.save)
         .delete(transportType.remove)
 
