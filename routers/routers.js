@@ -4,6 +4,7 @@ const report = require('./report')
 const reportType = require('./report_type')
 const transportType = require('./transport_type')
 const passport = require('../config/passport')
+const admin = require('../config/admin')
 
 module.exports = app => {
     app.post('/signup', user.save)
@@ -38,22 +39,22 @@ module.exports = app => {
     app.route('/report_type')
         .all(passport.authenticate())
         .get(reportType.get)
-        .post(reportType.save)
+        .post(admin(reportType.save))
 
     app.route('/report_type/:id')
         .all(passport.authenticate())
-        .patch(reportType.save)
+        .patch(admin(reportType.save))
         .delete(reportType.remove)
 
     //rotas de tipos de transporte 
     app.route('/transport_type')
         .all(passport.authenticate())
-        .get(transportType.get)
-        .post(transportType.save)
+        .get(admin(transportType.get))
+        .post(admin(transportType.save))
 
     app.route('/transport_type/:id')
         .all(passport.authenticate())
-        .patch(transportType.save)
-        .delete(transportType.remove)
+        .patch(admin(transportType.save))
+        .delete(admin(transportType.remove))
 
 }
