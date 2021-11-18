@@ -14,8 +14,8 @@ module.exports = app => {
     //rotas de usuarios
     app.route('/user')
         .all(passport.authenticate())
-        .post(user.save)
-        .get(user.get)
+        .post(admin(user.save))
+        .get(admin(user.get))
         
     app.route('/user/:id')
         .all(passport.authenticate())
@@ -49,7 +49,7 @@ module.exports = app => {
     //rotas de tipos de transporte 
     app.route('/transport_type')
         .all(passport.authenticate())
-        .get(admin(transportType.get))
+        .get(transportType.get)
         .post(admin(transportType.save))
 
     app.route('/transport_type/:id')

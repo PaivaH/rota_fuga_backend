@@ -15,7 +15,11 @@ const save = (req, res) => {
         existsOrError(report.transport_id, 'Tipo de transporte não informado')
         existsOrError(report.transport_line, 'Linha não informado')
         existsOrError(report.occurrence_date, 'Data da ocorrencia não informado')
-        existsOrError(report.user_id, 'Autor não informado')
+        existsOrError(report.logradouro, 'logradouro não informado')
+        existsOrError(report.numero, 'numero não informado')
+        existsOrError(report.bairro, 'bairro não informado')
+        existsOrError(report.cidade, 'cidade não informado')
+        existsOrError(report.uf, 'uf não informado')
     } catch (msg) {
         res.status(400).send(msg)
     }
@@ -62,6 +66,8 @@ const get = async (req, res) => {
     db('report')
         .select()
         .limit(limit).offset(page * limit - limit)
+        .orderBy('id')
+        //.then(report => res.json(report))
         .then(report => res.json({ data: report, count, limit }))
         .catch(err => res.status(500).send(err))
 }

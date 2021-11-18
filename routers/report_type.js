@@ -11,7 +11,7 @@ const save = (req, res) => {
 
     try {
         existsOrError(report_type.name, 'Descrição não informada')
-        existsOrError(report_type.sensible, 'Informação sensivel ou não, não declarada')
+        //existsOrError(report_type.sensible, 'Informação sensivel ou não, não declarada')
     } catch (msg) {
         res.status(400).send(msg)
     }

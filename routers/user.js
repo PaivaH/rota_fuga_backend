@@ -11,11 +11,9 @@ const encryptPassword = password => {
 const save = async (req, res) => {
     const user = { ...req.body }
 
-    if (req.params.id) {
-        user.id = req.params.id
-    }
+    if(req.params.id) user.id = req.params.id
 
-    if(!req.originalUrl.startWith('/user')) user.admin = false
+    if(!req.originalUrl.startsWith('/users')) user.admin = false
     if(!req.user || !req.user.admin) user.admin = false
 
     try {
@@ -57,6 +55,7 @@ const get = (req, res) => {
     db('users')
         .select('id', 'name', 'email', 'admin')
         .whereNull('deletedAt')
+        .orderBy('id')
         .then(users => res.json(users))
         .catch(err => res.status(500).send(err))
 }

@@ -48,6 +48,7 @@ const remove = async (req, res) => {
 const get = (req, res) => {
     db('transport_type')
         .select()
+        .orderBy('id')
         .then(users => res.json(users))
         .catch(err => res.status(500).send(err))
 }
