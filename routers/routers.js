@@ -23,6 +23,8 @@ module.exports = app => {
         .patch(user.save)
         .delete(user.remove)
 
+    app.get('/last_reports', report.lastReports)
+    
     //rotas de reportes
     app.route('/report')
         .all(passport.authenticate())
