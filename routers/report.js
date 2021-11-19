@@ -88,6 +88,7 @@ const lastReports = async (req, res) => {
             'r.bairro', 'r.cidade', 'r.uf'
         )
         .where('rt.sensible', '=', 'false')
+        .orderBy('r.reported_date')
         .limit(limit).offset(page * limit - limit)
         //.then(report => res.json(report))
         .then(report => res.json({ data: report, count, limit }))
